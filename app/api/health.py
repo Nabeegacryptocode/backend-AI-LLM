@@ -41,15 +41,7 @@ async def health_check():
         logger.error(f"Pinecone health check failed: {e}")
         services_status["pinecone"] = "error"
     
-    # Check Redis (optional)
-    try:
-        if settings.REDIS_URL:
-            services_status["redis"] = "configured"
-        else:
-            services_status["redis"] = "not_configured"
-    except Exception as e:
-        logger.error(f"Redis health check failed: {e}")
-        services_status["redis"] = "error"
+    
     
     return HealthResponse(
         status="healthy",
