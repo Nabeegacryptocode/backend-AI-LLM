@@ -1,0 +1,40 @@
+# Copy these environment variables to Railway
+# Go to: Railway Dashboard > Your Project > Variables
+
+# Required - OpenAI API Key
+OPENAI_API_KEY=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
+
+# Required - Pinecone API Key
+PINECONE_API_KEY=pcsk_4QR1Sd_4ZBPgiE51J7aJ4zFPvTgYb6uuKQuYSwv8qvWkinTKHJyTUhbheUXNCCs2pz9bFn
+
+# Required - Pinecone Environment
+PINECONE_ENVIRONMENT=us-west1-gcp
+
+# Required - Pinecone Index Name
+PINECONE_INDEX_NAME=ibm-docs
+
+# Required - API Key for WordPress plugin (generate a secure random key)
+# Generate with: openssl rand -base64 32
+API_KEY=GENERATE_A_SECURE_RANDOM_KEY_HERE
+
+# Optional - CORS Origins (add your WordPress site URL)
+ALLOWED_ORIGINS=["*"]
+
+# Optional - LLM Settings
+LLM_MODEL=gpt-4-turbo-preview
+LLM_TEMPERATURE=0.7
+MAX_TOKENS=1000
+
+# Optional - Embedding Settings
+EMBEDDING_MODEL=text-embedding-3-small
+EMBEDDING_DIMENSION=1536
+
+# Optional - RAG Settings
+TOP_K_RESULTS=5
+CHUNK_SIZE=800
+CHUNK_OVERLAP=200
+MIN_RELEVANCE_SCORE=0.7
+
+# Optional - Logging
+LOG_LEVEL=INFO
+ENVIRONMENT=production

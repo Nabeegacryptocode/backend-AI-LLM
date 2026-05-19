@@ -4,6 +4,7 @@ Integration tests for end-to-end workflows
 import pytest
 from fastapi import status
 import time
+from unittest.mock import patch
 
 
 class TestEndToEndWorkflow:
