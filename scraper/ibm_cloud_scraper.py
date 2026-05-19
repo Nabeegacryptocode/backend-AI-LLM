@@ -5,8 +5,8 @@ from typing import List, Dict, Any
 import logging
 from bs4 import BeautifulSoup
 
-from scraper.base_scraper import BaseScraper
-from scraper.document_processor import DocumentProcessor
+from backend.scraper.base_scraper import BaseScraper
+from backend.scraper.document_processor import DocumentProcessor
 
 logger = logging.getLogger(__name__)
 

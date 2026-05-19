@@ -5,7 +5,7 @@ from typing import List, Dict, Any
 import re
 import logging
 
-from app.config import settings
+from backend.app.config import settings
 
 logger = logging.getLogger(__name__)
 

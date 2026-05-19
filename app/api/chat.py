@@ -5,9 +5,9 @@ from fastapi import APIRouter, HTTPException, Header
 from typing import Optional
 import logging
 
-from app.models import ChatRequest, ChatResponse, Source
-from app.config import settings
-from services.rag_service import rag_service
+from backend.app.models import ChatRequest, ChatResponse, Source
+from backend.app.config import settings
+from backend.services.rag_service import rag_service
 
 router = APIRouter()
 logger = logging.getLogger(__name__)

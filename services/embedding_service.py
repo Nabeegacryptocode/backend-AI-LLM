@@ -6,9 +6,9 @@ import logging
 import hashlib
 from datetime import datetime
 
-from services.llm_service import llm_service
-from services.vector_service import vector_service
-from app.config import settings
+from backend.services.llm_service import llm_service
+from backend.services.vector_service import vector_service
+from backend.app.config import settings
 
 logger = logging.getLogger(__name__)
 

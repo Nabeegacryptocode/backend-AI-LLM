@@ -6,7 +6,7 @@ from typing import Optional, Dict, Any, List
 import logging
 from tenacity import retry, stop_after_attempt, wait_exponential
 
-from app.config import settings
+from backend.app.config import settings
 
 logger = logging.getLogger(__name__)
 

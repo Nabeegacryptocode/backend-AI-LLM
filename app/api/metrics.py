@@ -5,9 +5,9 @@ from fastapi import APIRouter, HTTPException, Depends
 from typing import Optional
 import logging
 
-from app.models import ErrorResponse
-from services.monitoring_service import get_metrics_collector
-from app.utils.auth import verify_api_key
+from backend.app.models import ErrorResponse
+from backend.services.monitoring_service import get_metrics_collector
+from backend.app.utils.auth import verify_api_key
 
 router = APIRouter()
 logger = logging.getLogger(__name__)

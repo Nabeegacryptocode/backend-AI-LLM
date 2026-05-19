@@ -6,7 +6,7 @@ from typing import List, Dict, Any, Optional
 import logging
 from datetime import datetime
 
-from app.config import settings
+from backend.app.config import settings
 
 logger = logging.getLogger(__name__)
 

@@ -5,8 +5,8 @@ from fastapi import APIRouter
 from datetime import datetime
 import logging
 
-from app.models import HealthResponse
-from app.config import settings
+from backend.app.models import HealthResponse
+from backend.app.config import settings
 
 router = APIRouter()
 logger = logging.getLogger(__name__)

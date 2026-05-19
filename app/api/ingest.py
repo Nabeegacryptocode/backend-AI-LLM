@@ -5,8 +5,8 @@ from fastapi import APIRouter, HTTPException, Header
 from typing import Optional
 import logging
 
-from app.models import IngestRequest, IngestResponse
-from app.config import settings
+from backend.app.models import IngestRequest, IngestResponse
+from backend.app.config import settings
 
 router = APIRouter()
 logger = logging.getLogger(__name__)

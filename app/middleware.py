@@ -6,7 +6,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 import time
 import logging
 
-from services.monitoring_service import get_metrics_collector
+from backend.services.monitoring_service import get_metrics_collector
 
 logger = logging.getLogger(__name__)
 

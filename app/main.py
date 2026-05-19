@@ -8,10 +8,10 @@ from fastapi.exceptions import RequestValidationError
 from contextlib import asynccontextmanager
 import logging
 
-from app.config import settings
-from app.models import ErrorResponse
-from app.api import chat, health, ingest, metrics
-from app.middleware import MonitoringMiddleware, RequestLoggingMiddleware
+from backend.app.config import settings
+from backend.app.models import ErrorResponse
+from backend.app.api import chat, health, ingest, metrics
+from backend.app.middleware import MonitoringMiddleware, RequestLoggingMiddleware
 
 # Configure logging
 logging.basicConfig(
