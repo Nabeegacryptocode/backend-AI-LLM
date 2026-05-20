@@ -29,11 +29,30 @@ class ChatResponse(BaseModel):
     tokens_used: int = Field(..., description="Total tokens used")
 
 
+class DocumentMetadata(BaseModel):
+    """Metadata for a document"""
+    source: str = Field(..., description="Source URL or identifier")
+    title: str = Field(..., description="Document title")
+    section: Optional[str] = Field(None, description="Document section")
+
+
+class Document(BaseModel):
+    """Document model for direct ingestion"""
+    id: str = Field(..., description="Document ID")
+    text: str = Field(..., description="Document text content")
+    metadata: DocumentMetadata = Field(..., description="Document metadata")
+
+
 class IngestRequest(BaseModel):
-    """Request model for document ingestion"""
+    """Request model for document ingestion from URL"""
     url: str = Field(..., description="URL to scrape")
     source_type: str = Field(..., description="Type of source (ibm-cloud, ibm-watson, etc.)")
     force_refresh: bool = Field(False, description="Force re-scraping even if already exists")
+
+
+class DirectIngestRequest(BaseModel):
+    """Request model for direct document ingestion"""
+    documents: List[Document] = Field(..., description="List of documents to ingest")
 
 
 class IngestResponse(BaseModel):

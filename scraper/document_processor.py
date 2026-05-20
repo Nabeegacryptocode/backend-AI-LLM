@@ -139,6 +139,11 @@ class DocumentProcessor:
         content = document.get('content', '')
         base_metadata = document.get('metadata', {})
         
+        # Skip documents with empty content
+        if not content or not content.strip():
+            logger.warning(f"Skipping document with empty content: {base_metadata.get('url', 'unknown')}")
+            return []
+        
         # Create chunks
         chunks = DocumentProcessor.chunk_document(
             content,
@@ -146,9 +151,13 @@ class DocumentProcessor:
             chunk_overlap=chunk_overlap
         )
         
-        # Create chunk documents
+        # Create chunk documents, filtering out empty chunks
         chunk_docs = []
         for i, chunk in enumerate(chunks):
+            # Skip empty chunks
+            if not chunk or not chunk.strip():
+                continue
+                
             chunk_metadata = base_metadata.copy()
             chunk_metadata.update({
                 'chunk_index': i,

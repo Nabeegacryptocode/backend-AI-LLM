@@ -4,6 +4,8 @@ Configuration management for IBM Docs LLM API
 from pydantic_settings import BaseSettings
 from typing import List
 import json
+import os
+from pathlib import Path
 
 
 class Settings(BaseSettings):
@@ -27,6 +29,7 @@ class Settings(BaseSettings):
     PINECONE_API_KEY: str
     PINECONE_ENVIRONMENT: str
     PINECONE_INDEX_NAME: str = "ibm-docs"
+    PINECONE_CLOUD: str = "aws"  # Cloud provider for Pinecone serverless
     
     # Redis Settings
     REDIS_URL: str = "redis://localhost:6379"
@@ -61,7 +64,8 @@ class Settings(BaseSettings):
             return ["*"]
     
     class Config:
-        env_file = ".env"
+        # Look for .env in backend directory
+        env_file = os.path.join(Path(__file__).parent.parent, ".env")
         case_sensitive = True
 
 

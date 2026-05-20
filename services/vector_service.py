@@ -1,7 +1,7 @@
 """
 Vector Database Service for Pinecone integration
 """
-import pinecone
+from pinecone import Pinecone, ServerlessSpec
 from typing import List, Dict, Any, Optional
 import logging
 from datetime import datetime
@@ -17,6 +17,7 @@ class VectorService:
     def __init__(self):
         """Initialize Pinecone client"""
         self.initialized = False
+        self.pc = None
         self.index = None
         self.index_name = settings.PINECONE_INDEX_NAME
         
@@ -28,18 +29,18 @@ class VectorService:
         try:
             logger.info("Initializing Pinecone connection")
             
-            pinecone.init(
-                api_key=settings.PINECONE_API_KEY,
-                environment=settings.PINECONE_ENVIRONMENT
-            )
+            # Initialize Pinecone client with new API
+            self.pc = Pinecone(api_key=settings.PINECONE_API_KEY)
             
             # Check if index exists
-            if self.index_name not in pinecone.list_indexes():
+            existing_indexes = [index.name for index in self.pc.list_indexes()]
+            
+            if self.index_name not in existing_indexes:
                 logger.warning(f"Index {self.index_name} does not exist. Creating it...")
                 self.create_index()
             
             # Connect to index
-            self.index = pinecone.Index(self.index_name)
+            self.index = self.pc.Index(self.index_name)
             self.initialized = True
             
             logger.info(f"Successfully connected to Pinecone index: {self.index_name}")
@@ -53,13 +54,15 @@ class VectorService:
         try:
             logger.info(f"Creating Pinecone index: {self.index_name}")
             
-            pinecone.create_index(
+            # Use ServerlessSpec for serverless indexes
+            self.pc.create_index(
                 name=self.index_name,
                 dimension=settings.EMBEDDING_DIMENSION,
                 metric="cosine",
-                metadata_config={
-                    "indexed": ["source_type", "title", "url"]
-                }
+                spec=ServerlessSpec(
+                    cloud=settings.PINECONE_CLOUD or "aws",
+                    region=settings.PINECONE_ENVIRONMENT
+                )
             )
             
             logger.info(f"Index {self.index_name} created successfully")

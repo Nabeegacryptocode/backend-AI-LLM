@@ -95,15 +95,25 @@ class EmbeddingService:
         try:
             logger.info(f"Generating embeddings for {len(documents)} documents")
             
+            # Filter out documents with empty content
+            valid_documents = [doc for doc in documents if doc.get("content", "").strip()]
+            
+            if len(valid_documents) < len(documents):
+                logger.warning(f"Filtered out {len(documents) - len(valid_documents)} documents with empty content")
+            
+            if not valid_documents:
+                logger.error("No valid documents to embed after filtering")
+                return []
+            
             # Extract content for batch embedding
-            contents = [doc["content"] for doc in documents]
+            contents = [doc["content"] for doc in valid_documents]
             
             # Generate embeddings in batch
             embeddings = await self.llm_service.generate_embeddings_batch(contents)
             
             # Combine embeddings with documents
             embedded_docs = []
-            for i, doc in enumerate(documents):
+            for i, doc in enumerate(valid_documents):
                 doc_id = self.generate_document_id(
                     content=doc["content"],
                     url=doc.get("metadata", {}).get("url", "")
@@ -167,6 +177,47 @@ class EmbeddingService:
         except Exception as e:
             logger.error(f"Error ingesting documents: {str(e)}")
             raise
+    async def ingest_document(
+        self,
+        doc_id: str,
+        text: str,
+        metadata: Dict[str, Any],
+        namespace: str = ""
+    ) -> Dict[str, Any]:
+        """
+        Ingest a single document into vector database
+        
+        Args:
+            doc_id: Document ID
+            text: Document text content
+            metadata: Document metadata
+            namespace: Optional namespace for organization
+            
+        Returns:
+            Ingestion result
+        """
+        try:
+            logger.info(f"Ingesting single document: {doc_id}")
+            
+            # Prepare document for ingestion
+            document = {
+                "content": text,
+                "metadata": metadata
+            }
+            
+            # Use the batch ingestion method
+            result = await self.ingest_documents([document], namespace=namespace)
+            
+            return {
+                "status": "success",
+                "document_id": doc_id,
+                "vectors_upserted": result["vectors_upserted"]
+            }
+            
+        except Exception as e:
+            logger.error(f"Error ingesting document {doc_id}: {str(e)}")
+            raise
+    
     
     async def search_similar(
         self,

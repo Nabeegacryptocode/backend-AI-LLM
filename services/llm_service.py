@@ -1,7 +1,7 @@
 """
 LLM Service for interacting with OpenAI API
 """
-import openai
+from openai import AsyncOpenAI
 from typing import Optional, Dict, Any, List
 import logging
 from tenacity import retry, stop_after_attempt, wait_exponential
@@ -16,7 +16,7 @@ class LLMService:
     
     def __init__(self):
         """Initialize OpenAI client"""
-        openai.api_key = settings.OPENAI_API_KEY
+        self.client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
         self.model = settings.LLM_MODEL
         self.temperature = settings.LLM_TEMPERATURE
         self.embedding_model = settings.EMBEDDING_MODEL
@@ -38,12 +38,12 @@ class LLMService:
         try:
             logger.debug(f"Generating embedding for text: {text[:100]}...")
             
-            response = await openai.Embedding.acreate(
+            response = await self.client.embeddings.create(
                 model=self.embedding_model,
                 input=text
             )
             
-            embedding = response['data'][0]['embedding']
+            embedding = response.data[0].embedding
             logger.debug(f"Generated embedding with dimension: {len(embedding)}")
             
             return embedding
@@ -115,7 +115,7 @@ Please provide a detailed answer based on the context above. If the context does
             messages.append({"role": "user", "content": user_prompt})
             
             # Generate response
-            response = await openai.ChatCompletion.acreate(
+            response = await self.client.chat.completions.create(
                 model=self.model,
                 messages=messages,
                 temperature=self.temperature,
@@ -150,12 +150,12 @@ Please provide a detailed answer based on the context above. If the context does
         try:
             logger.info(f"Generating embeddings for {len(texts)} texts")
             
-            response = await openai.Embedding.acreate(
+            response = await self.client.embeddings.create(
                 model=self.embedding_model,
                 input=texts
             )
             
-            embeddings = [item['embedding'] for item in response['data']]
+            embeddings = [item.embedding for item in response.data]
             logger.info(f"Generated {len(embeddings)} embeddings")
             
             return embeddings

@@ -177,7 +177,13 @@ class IBMCloudScraper(BaseScraper):
         """
         all_chunks = []
         
-        for doc in documents:
+        # Filter out documents with empty content
+        valid_documents = [doc for doc in documents if doc.get('content', '').strip()]
+        
+        if len(valid_documents) < len(documents):
+            logger.warning(f"Filtered out {len(documents) - len(valid_documents)} documents with empty content")
+        
+        for doc in valid_documents:
             # Create chunks with metadata
             chunks = DocumentProcessor.create_chunks_with_metadata(
                 document={
@@ -188,27 +194,28 @@ class IBMCloudScraper(BaseScraper):
             
             all_chunks.extend(chunks)
         
-        logger.info(f"Created {len(all_chunks)} chunks from {len(documents)} documents")
+        logger.info(f"Created {len(all_chunks)} chunks from {len(valid_documents)} documents")
         
         return all_chunks
 
 
 # Predefined IBM Cloud documentation sections
+# Using specific topic URLs that have static content instead of JS-rendered landing pages
 IBM_CLOUD_SECTIONS = {
-    "overview": "https://cloud.ibm.com/docs/overview",
-    "account": "https://cloud.ibm.com/docs/account",
+    "overview": "https://cloud.ibm.com/docs/overview?topic=overview-whatis-platform",
+    "account": "https://cloud.ibm.com/docs/account?topic=account-account-getting-started",
     "iam": "https://cloud.ibm.com/docs/account?topic=account-iamoverview",
-    "containers": "https://cloud.ibm.com/docs/containers",
-    "kubernetes": "https://cloud.ibm.com/docs/containers?topic=containers-getting-started",
-    "openshift": "https://cloud.ibm.com/docs/openshift",
-    "vpc": "https://cloud.ibm.com/docs/vpc",
-    "compute": "https://cloud.ibm.com/docs/virtual-servers",
-    "storage": "https://cloud.ibm.com/docs/cloud-object-storage",
+    "containers": "https://cloud.ibm.com/docs/containers?topic=containers-getting-started",
+    "kubernetes": "https://cloud.ibm.com/docs/containers?topic=containers-cs_tech",
+    "openshift": "https://cloud.ibm.com/docs/openshift?topic=openshift-getting-started",
+    "vpc": "https://cloud.ibm.com/docs/vpc?topic=vpc-getting-started",
+    "compute": "https://cloud.ibm.com/docs/virtual-servers?topic=virtual-servers-getting-started-tutorial",
+    "storage": "https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-getting-started-cloud-object-storage",
     "networking": "https://cloud.ibm.com/docs/vpc?topic=vpc-about-networking-for-vpc",
-    "databases": "https://cloud.ibm.com/docs/databases-for-postgresql",
-    "ai": "https://cloud.ibm.com/docs/watson",
-    "devops": "https://cloud.ibm.com/docs/ContinuousDelivery",
-    "security": "https://cloud.ibm.com/docs/security-compliance"
+    "databases": "https://cloud.ibm.com/docs/databases-for-postgresql?topic=databases-for-postgresql-getting-started",
+    "ai": "https://cloud.ibm.com/docs/watson?topic=watson-about",
+    "devops": "https://cloud.ibm.com/docs/ContinuousDelivery?topic=ContinuousDelivery-getting-started",
+    "security": "https://cloud.ibm.com/docs/security-compliance?topic=security-compliance-getting-started"
 }
 
 # Made with Bob

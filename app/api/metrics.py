@@ -49,9 +49,11 @@ async def get_metrics_summary(api_key: str = Depends(verify_api_key)):
         collector = get_metrics_collector()
         summary = collector.get_summary()
         
+        # Return summary fields at top level for compatibility
         return {
             "status": "success",
-            "summary": summary
+            **summary,  # Unpack summary to top level
+            "success_rate": 1.0 - summary.get("error_rate", 0)  # Add success_rate field
         }
         
     except Exception as e:
