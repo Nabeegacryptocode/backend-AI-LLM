@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: ibm-docs-llm-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: PINECONE_API_KEY
+        sync: false
+      - key: PINECONE_ENVIRONMENT
+        value: us-west1-gcp
+      - key: API_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.11.0
